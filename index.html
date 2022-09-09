@@ -474,14 +474,14 @@
 			var val = getValue('cmd'+id+'text').substr(0, 4).toLowerCase();
 			var ind = getValue('cmd'+id+'text').substr(4, 7).toLowerCase();
 			
-			if ((val == '' && ind == '') ||(val.indexOf("lod ") == 0
-				|| val.indexOf("sto ") == 0
+			if ((val == '' && ind == '') ||(val.indexOf("lda ") == 0
+				|| val.indexOf("sta ") == 0
 				|| val.indexOf("add ") == 0
 				|| val.indexOf("sub ") == 0
 				|| val.indexOf("mul ") == 0
 				|| val.indexOf("div ") == 0)
 				&& ((ind.indexOf("#") == 0
-					&& val.indexOf("sto ") != 0)
+					&& val.indexOf("sta ") != 0)
 					|| ind.indexOf("x") == 0
 					|| ind.indexOf("y") == 0
 					|| ind.indexOf("w") == 0
@@ -640,8 +640,8 @@
 											changeFocus('decoder','aluOp');
 										
 										switch (getValue('irCmd')) {
-											case "LOD": setValue('aluOp', "="); break;
-											case "STO": setValue('aluOp', "="); break;
+											case "LDA": setValue('aluOp', "="); break;
+											case "STA": setValue('aluOp', "="); break;
 											case "ADD": setValue('aluOp', "+"); break;
 											case "SUB": setValue('aluOp', "-"); break;
 											case "MUL": setValue('aluOp', "*"); break;
@@ -653,8 +653,8 @@
 										
 										setTimeout (function(){
 											
-											if (!instructionIs("JMZ") && !instructionIs("JMP") && !instructionIs("STO")) changeFocus('aluOp','alu2');
-											if (instructionIs("STO")) changeFocus('aluOp','acc');
+											if (!instructionIs("JMZ") && !instructionIs("JMP") && !instructionIs("STA")) changeFocus('aluOp','alu2');
+											if (instructionIs("STA")) changeFocus('aluOp','acc');
 											
 											cType = 0;
 											if (!instructionIs("HLT") && !instructionIs("NOP") && !instructionIs("JMZ") && !instructionIs("JMP")) {
@@ -674,19 +674,19 @@
 												}
 											}
 											
-											if (instructionIs("STO"))
+											if (instructionIs("STA"))
 												setValue('alu2', '');
 											
-											else if (!instructionIs("LOD") && !instructionIs("JMP") && !instructionIs("JMZ"))
+											else if (!instructionIs("LDA") && !instructionIs("JMP") && !instructionIs("JMZ"))
 												setValue('alu1', getValue('acc'));
 					
 											delay = getValue('delay');
 											
 											setTimeout (function(){
 												
-												if (!instructionIs("JMZ") && !instructionIs("JMP") && !instructionIs("STO")) changeFocus('alu2','acc');
+												if (!instructionIs("JMZ") && !instructionIs("JMP") && !instructionIs("STA")) changeFocus('alu2','acc');
 					
-												if (instructionIs("STO")) {
+												if (instructionIs("STA")) {
 													if (irLocContains('T'))
 														setValue('var'+getValue('irLoc')+'text', getValue('acc'));
 													else
@@ -705,7 +705,7 @@
 														break;
 												}
 												
-												if (!instructionIs("STO"))
+												if (!instructionIs("STA"))
 													switch (getValue('aluOp')) {
 														case "=": setValue('acc', getInt('alu2') || 0); break;
 														case "+": setValue('acc', parseInt(getInt('alu2') + getInt('acc'))); break;
@@ -715,7 +715,7 @@
 													}
 												
 												setValue('alu1', ''); setValue('alu2', ''); setValue('aluOp', '');
-												if (instructionIs("STO")) { changeFocus('acc','alu2'); setValue('alu2', getValue('acc'))}
+												if (instructionIs("STA")) { changeFocus('acc','alu2'); setValue('alu2', getValue('acc'))}
 					
 												delay = getValue('delay');
 					
@@ -822,8 +822,8 @@
                 <b>CREDITI</b>
             </div>
 			<div id='content'>
-                Questo simulatore della macchina di Von Neumann è stato realizzato da <a href="http://www.lorenzoganni.com" target="_blank">Lorenzo Ganni</a>.<br /><br />
-                Questo file costituisce un'estensione dell'opera di Giorgio Meini, Fiorenzo Formichi, 'Tecnologie e progettazione di sistemi informatici e di telecomunicazioni'.<br /><br />
+                Simulador hecho por <a href="http://www.lorenzoganni.com" target="_blank">Lorenzo Ganni</a>.<br /><br />
+                Este archivo es una extension de Giorgio Meini, Fiorenzo Formichi, 'Tecnologie e progettazione di sistemi informatici e di telecomunicazioni'.<br /><br />
                 © Zanichelli Editore S.p.A., 2015
             </div>
         </div>
