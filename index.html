@@ -642,8 +642,6 @@
 											changeFocus('decoder','aluOp');
 										
 										switch (getValue('irCmd')) {
-											case "LDA": setValue('aluOp', "="); break;
-											case "STA": setValue('aluOp', "="); break;
 											case "ADD": setValue('aluOp', "+"); break;
 											case "SUB": setValue('aluOp', "-"); break;										
 											case "HLT": stopMachine(2); break;
@@ -653,28 +651,32 @@
 										
 										setTimeout (function(){
 											
-											if (!instructionIs("JMZ") && !instructionIs("JMP") && !instructionIs("STA")) changeFocus('aluOp','alu2');
-											if (instructionIs("STA")) changeFocus('aluOp','acc');
+											if (!instructionIs("JMZ") && !instructionIs("JMP") && !instructionIs("STA")) changeFocus('aluOp','alu2', 'MDR');
+											if (instructionIs("STA")) changeFocus('aluOp','acc', 'MDR');
 											
 											cType = 0;
 											if (!instructionIs("HLT") && !instructionIs("NOP") && !instructionIs("JMZ") && !instructionIs("JMP")) {
 												
 												if (irLocContains('#')) { // #n
+													setValue('MDR', getValue('irLoc').replace("#",""));
 													setValue('alu2', getValue('irLoc').replace("#",""));
 												}
 												else if (irLocContains('T')) { // t1 - t40
 													cType = 1;
+													setValue('MDR', (getValue('var'+getValue('irLoc')+'text')) ? getValue('var'+getValue('irLoc')+'text') : 0);
 													setValue('alu2', (getValue('var'+getValue('irLoc')+'text')) ? getValue('var'+getValue('irLoc')+'text') : 0);
 													focusField('var'+getValue('irLoc')+'text');
 												}
 												else { // x,y,z,w
 													cType = 2;
+													setValue('MDR', (getValue('value'+getValue('irLoc')+'text')) ? getValue('value'+getValue('irLoc')+'text') : 0);
 													setValue('alu2', (getValue('value'+getValue('irLoc')+'text')) ? getValue('value'+getValue('irLoc')+'text') : 0);
 													focusField('value'+getValue('irLoc')+'text');
 												}
 											}
 											
 											if (instructionIs("STA"))
+												setValue('MDR', '');
 												setValue('alu2', '');
 											
 											else if (!instructionIs("LDA") && !instructionIs("JMP") && !instructionIs("JMZ"))
@@ -684,7 +686,7 @@
 											
 											setTimeout (function(){
 												
-												if (!instructionIs("JMZ") && !instructionIs("JMP") && !instructionIs("STA")) changeFocus('alu2','acc');
+												if (!instructionIs("JMZ") && !instructionIs("JMP") && !instructionIs("STA")) changeFocus('alu2','acc', 'MDR');
 					
 												if (instructionIs("STA")) {
 													if (irLocContains('T'))
@@ -708,21 +710,21 @@
 												if (!instructionIs("STA"))
 													switch (getValue('aluOp')) {
 														case "=": setValue('acc', getInt('alu2') || 0); break;
+														case "=": setValue('acc', getInt('MDR') || 0); break;
 														case "+": setValue('acc', parseInt(getInt('alu2') + getInt('acc'))); break;
 														case "-": setValue('acc', parseInt(getInt('acc') - getInt('alu2'))); break;
-														case "*": setValue('acc', parseInt(getInt('alu2') * getInt('acc'))); break;
-														case "/": setValue('acc', parseInt(getInt('acc') / getInt('alu2'))); break;
 													}
 												
-												setValue('alu1', ''); setValue('alu2', ''); setValue('aluOp', '');
-												if (instructionIs("STA")) { changeFocus('acc','alu2'); setValue('alu2', getValue('acc'))}
+												setValue('alu1', ''); setValue('alu2', ''); setValue('aluOp', ''); setValue('MDR', '');
+												if (instructionIs("STA")) { changeFocus('acc','alu2', 'MDR'); setValue('alu2', getValue('acc'))}
 					
 												delay = getValue('delay');
 					
 												setTimeout (function(){
 													
-													unfocusField('pc','acc','alu2');
+													unfocusField('pc','acc','alu2', 'MDR');
 													setValue('alu2', '');
+													setValue('MDR', '');
 													
 													if (cmd == 'step' || stop_status == 1 || stop_status == 2) {
 														
@@ -905,6 +907,7 @@
                 <label id='busL'>Bus datos / instrucciones</label>
                 <label id='addressesBusL' >Bus direccion</label>
                 <label id='ramL' class='rotated'>RAM</label>
+				<input type=text readonly id='MDR'/>
                 <input type=text readonly id='irCmd'/>
                 <input type=text readonly id='irLoc'/>
                 <input type=number value=0 id='acc'/>
