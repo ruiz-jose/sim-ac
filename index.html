@@ -476,9 +476,7 @@
 			if ((val == '' && ind == '') ||(val.indexOf("lda ") == 0
 				|| val.indexOf("sta ") == 0
 				|| val.indexOf("add ") == 0
-				|| val.indexOf("sub ") == 0
-				|| val.indexOf("mul ") == 0
-				|| val.indexOf("div ") == 0)
+				|| val.indexOf("sub ") == 0)
 				&& ((ind.indexOf("#") == 0
 					&& val.indexOf("sta ") != 0)
 					|| ind.indexOf("x") == 0
@@ -642,9 +640,7 @@
 											case "LDA": setValue('aluOp', "="); break;
 											case "STA": setValue('aluOp', "="); break;
 											case "ADD": setValue('aluOp', "+"); break;
-											case "SUB": setValue('aluOp', "-"); break;
-											case "MUL": setValue('aluOp', "*"); break;
-											case "DIV": setValue('aluOp', "/"); break;
+											case "SUB": setValue('aluOp', "-"); break;										
 											case "HLT": stopMachine(2); break;
 										}
 					
