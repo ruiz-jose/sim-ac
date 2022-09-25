@@ -156,6 +156,9 @@
 		label#aluL {
 		  top: -45px; left: 40%;
 		}
+		label#MDRL {
+		  top: -45px; left: 40%;
+		}
 		label#accL {
 		  top: 67%; left: 21%;
 		}
@@ -222,8 +225,8 @@
 		  padding: 3px;
 		}
 		#simulator input#MDR {
-		  top: 20px; left: 50%;
-		  width: 37%;
+		  top: 10px; left: 10%;
+		  width: 27%;
 		  padding: 3px;
 		}
 		#simulator input#alu2 {
@@ -716,7 +719,7 @@
 													}
 												
 												setValue('alu1', ''); setValue('alu2', ''); setValue('aluOp', ''); setValue('MDR', '');
-												if (instructionIs("STA")) { changeFocus('acc','alu2', 'MDR'); setValue('alu2', getValue('acc'))}
+												if (instructionIs("STA")) { changeFocus('acc','alu2', 'MDR'); setValue('alu2', getValue('acc'));}
 					
 												delay = getValue('delay');
 					
@@ -907,8 +910,9 @@
                 <label id='busL'>Bus datos / instrucciones</label>
                 <label id='addressesBusL' >Bus direccion</label>
                 <label id='ramL' class='rotated'>RAM</label>
+				<label id='MDRL'>MDR</label>
 				<input type=text readonly id='MDR'/>
-                <input type=text readonly id='irCmd'/>
+				<input type=text readonly id='irCmd'/>
                 <input type=text readonly id='irLoc'/>
                 <input type=number value=0 id='acc'/>
                 <input type=number value=0 id='pc' min=0 max=9999 onchange="checkCorrectPC()"/>
