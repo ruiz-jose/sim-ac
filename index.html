@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns='http://www.w3.org/1999/xhtml'>
     <head>
         <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
@@ -156,9 +157,6 @@
 		label#aluL {
 		  top: -45px; left: 40%;
 		}
-		label#MDRL {
-		  top: -45px; left: 40%;
-		}
 		label#accL {
 		  top: 67%; left: 21%;
 		}
@@ -222,11 +220,6 @@
 		#simulator input#alu1 {
 		  top: 20px; left: 9%;
 		  width: 36%;
-		  padding: 3px;
-		}
-		#simulator input#MDR {
-		  top: 10px; left: 10%;
-		  width: 27%;
 		  padding: 3px;
 		}
 		#simulator input#alu2 {
@@ -645,6 +638,8 @@
 											changeFocus('decoder','aluOp');
 										
 										switch (getValue('irCmd')) {
+											case "LDA": setValue('aluOp', "="); break;
+											case "STA": setValue('aluOp', "="); break;
 											case "ADD": setValue('aluOp', "+"); break;
 											case "SUB": setValue('aluOp', "-"); break;										
 											case "HLT": stopMachine(2); break;
@@ -654,32 +649,28 @@
 										
 										setTimeout (function(){
 											
-											if (!instructionIs("JMZ") && !instructionIs("JMP") && !instructionIs("STA")) changeFocus('aluOp','alu2', 'MDR');
-											if (instructionIs("STA")) changeFocus('aluOp','acc', 'MDR');
+											if (!instructionIs("JMZ") && !instructionIs("JMP") && !instructionIs("STA")) changeFocus('aluOp','alu2');
+											if (instructionIs("STA")) changeFocus('aluOp','acc');
 											
 											cType = 0;
 											if (!instructionIs("HLT") && !instructionIs("NOP") && !instructionIs("JMZ") && !instructionIs("JMP")) {
 												
-												if (irLocContains('#')) { // #n
-													setValue('MDR', getValue('irLoc').replace("#",""));
+												if (irLocContains('#')) { // #n
 													setValue('alu2', getValue('irLoc').replace("#",""));
 												}
 												else if (irLocContains('T')) { // t1 - t40
 													cType = 1;
-													setValue('MDR', (getValue('var'+getValue('irLoc')+'text')) ? getValue('var'+getValue('irLoc')+'text') : 0);
 													setValue('alu2', (getValue('var'+getValue('irLoc')+'text')) ? getValue('var'+getValue('irLoc')+'text') : 0);
 													focusField('var'+getValue('irLoc')+'text');
 												}
 												else { // x,y,z,w
 													cType = 2;
-													setValue('MDR', (getValue('value'+getValue('irLoc')+'text')) ? getValue('value'+getValue('irLoc')+'text') : 0);
 													setValue('alu2', (getValue('value'+getValue('irLoc')+'text')) ? getValue('value'+getValue('irLoc')+'text') : 0);
 													focusField('value'+getValue('irLoc')+'text');
 												}
 											}
 											
 											if (instructionIs("STA"))
-												setValue('MDR', '');
 												setValue('alu2', '');
 											
 											else if (!instructionIs("LDA") && !instructionIs("JMP") && !instructionIs("JMZ"))
@@ -689,7 +680,7 @@
 											
 											setTimeout (function(){
 												
-												if (!instructionIs("JMZ") && !instructionIs("JMP") && !instructionIs("STA")) changeFocus('alu2','acc', 'MDR');
+												if (!instructionIs("JMZ") && !instructionIs("JMP") && !instructionIs("STA")) changeFocus('alu2','acc');
 					
 												if (instructionIs("STA")) {
 													if (irLocContains('T'))
@@ -713,21 +704,21 @@
 												if (!instructionIs("STA"))
 													switch (getValue('aluOp')) {
 														case "=": setValue('acc', getInt('alu2') || 0); break;
-														case "=": setValue('acc', getInt('MDR') || 0); break;
 														case "+": setValue('acc', parseInt(getInt('alu2') + getInt('acc'))); break;
 														case "-": setValue('acc', parseInt(getInt('acc') - getInt('alu2'))); break;
+														case "*": setValue('acc', parseInt(getInt('alu2') * getInt('acc'))); break;
+														case "/": setValue('acc', parseInt(getInt('acc') / getInt('alu2'))); break;
 													}
 												
-												setValue('alu1', ''); setValue('alu2', ''); setValue('aluOp', ''); setValue('MDR', '');
-												if (instructionIs("STA")) { changeFocus('acc','alu2', 'MDR'); setValue('alu2', getValue('acc'));}
+												setValue('alu1', ''); setValue('alu2', ''); setValue('aluOp', '');
+												if (instructionIs("STA")) { changeFocus('acc','alu2'); setValue('alu2', getValue('acc'))}
 					
 												delay = getValue('delay');
 					
 												setTimeout (function(){
 													
-													unfocusField('pc','acc','alu2', 'MDR');
+													unfocusField('pc','acc','alu2');
 													setValue('alu2', '');
-													setValue('MDR', '');
 													
 													if (cmd == 'step' || stop_status == 1 || stop_status == 2) {
 														
@@ -808,7 +799,7 @@
 					</image>
 					<polygon points="76.5,706.2 127.6,706.2 127.6,441 439.1,441 439.1,331.8 321.7,331.8 321.7,71.9 638.3,71.9 638.3,331.8 500.4,331.8 500.4,435.8 822.2,435.8 822.2,706.2 883.5,706.2 883.5,888.1 663.9,888.1 663.9,716.6 709.8,716.6 735.4,716.6 735.4,529.4 500.4,529.4 500.4,695.8 597.5,695.8 597.5,888.1 372.7,888.1 372.7,706.2 444.3,706.2 444.3,529.3 199.1,529.3 199.1,695.8 285.9,695.8 285.9,888.1 76.5,888.1 "/>
                 </svg>
-                <span>Von Neuman TUDW-ARQ</span>
+                <span>Von Neumann Machine Simulator TUDW-ARQ</span>
             </div>
             <ul>
                 <li onclick='showDialog("credits")'>Creditos</li>
@@ -838,15 +829,11 @@
                     <div class='title'><b>Instrucciones</b>&nbsp;<span><label id='cmdCounter'>0</label>&nbsp;/&nbsp;1000</span></div>
                     <ul>
                         <script>
-                        /*for (var c = 0; c < cmd_max; c++)  {
-                            if (c == 0) focusAttr = 'autofocus'; else focusAttr = '';
-                            document.write("<li>"+c+"<input type=text id='cmd"+c+"text' maxlength='10' placeholder='NOP' onchange='checkCorrectCmd("+c+");incrementCmdCounter()' "+focusAttr+"/></li>")
-                        }*/
-						for (var c = 0; c < cmd_max; c++)  {
+                        for (var c = 0; c < cmd_max; c++)  {
                             if (c == 0) focusAttr = 'autofocus'; else focusAttr = '';
                             document.write("<li>"+c+"<input type=text id='cmd"+c+"text' maxlength='10' placeholder='NOP' onchange='checkCorrectCmd("+c+");incrementCmdCounter()' "+focusAttr+"/></li>")
                         }
-						</script>
+                        </script>
                     </ul>
                 </div>
                 <div id='variables'>
@@ -914,7 +901,7 @@
                 <label id='busL'>Bus datos / instrucciones</label>
                 <label id='addressesBusL' >Bus direccion</label>
                 <label id='ramL' class='rotated'>RAM</label>
-				<input type=text readonly id='irCmd'/>
+                <input type=text readonly id='irCmd'/>
                 <input type=text readonly id='irLoc'/>
                 <input type=number value=0 id='acc'/>
                 <input type=number value=0 id='pc' min=0 max=9999 onchange="checkCorrectPC()"/>
