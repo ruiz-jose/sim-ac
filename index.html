@@ -808,7 +808,7 @@
 					</image>
 					<polygon points="76.5,706.2 127.6,706.2 127.6,441 439.1,441 439.1,331.8 321.7,331.8 321.7,71.9 638.3,71.9 638.3,331.8 500.4,331.8 500.4,435.8 822.2,435.8 822.2,706.2 883.5,706.2 883.5,888.1 663.9,888.1 663.9,716.6 709.8,716.6 735.4,716.6 735.4,529.4 500.4,529.4 500.4,695.8 597.5,695.8 597.5,888.1 372.7,888.1 372.7,706.2 444.3,706.2 444.3,529.3 199.1,529.3 199.1,695.8 285.9,695.8 285.9,888.1 76.5,888.1 "/>
                 </svg>
-                <span>Von Neumann Machine Simulator TUDW-ARQ</span>
+                <span>Von Neuman TUDW-ARQ</span>
             </div>
             <ul>
                 <li onclick='showDialog("credits")'>Creditos</li>
@@ -838,11 +838,15 @@
                     <div class='title'><b>Instrucciones</b>&nbsp;<span><label id='cmdCounter'>0</label>&nbsp;/&nbsp;1000</span></div>
                     <ul>
                         <script>
-                        for (var c = 0; c < cmd_max; c++)  {
+                        /*for (var c = 0; c < cmd_max; c++)  {
+                            if (c == 0) focusAttr = 'autofocus'; else focusAttr = '';
+                            document.write("<li>"+c+"<input type=text id='cmd"+c+"text' maxlength='10' placeholder='NOP' onchange='checkCorrectCmd("+c+");incrementCmdCounter()' "+focusAttr+"/></li>")
+                        }*/
+						for (var c = 0; c < cmd_max; c++)  {
                             if (c == 0) focusAttr = 'autofocus'; else focusAttr = '';
                             document.write("<li>"+c+"<input type=text id='cmd"+c+"text' maxlength='10' placeholder='NOP' onchange='checkCorrectCmd("+c+");incrementCmdCounter()' "+focusAttr+"/></li>")
                         }
-                        </script>
+						</script>
                     </ul>
                 </div>
                 <div id='variables'>
@@ -910,8 +914,6 @@
                 <label id='busL'>Bus datos / instrucciones</label>
                 <label id='addressesBusL' >Bus direccion</label>
                 <label id='ramL' class='rotated'>RAM</label>
-				<label id='MDRL'>MDR</label>
-				<input type=text readonly id='MDR'/>
 				<input type=text readonly id='irCmd'/>
                 <input type=text readonly id='irLoc'/>
                 <input type=number value=0 id='acc'/>
