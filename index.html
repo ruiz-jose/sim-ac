@@ -5,7 +5,6 @@
         <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
         <meta name='viewport' content='width=device-width'>
         <title>TUDW-ARQ</title>
-		<!-- Autoplay is allowed. -->
         <style>
 		* {user-select: none; -ms-user-select: none; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;}
 		html, body {
@@ -680,7 +679,7 @@
 											
 											else if (!instructionIs("LDA") && !instructionIs("JMP") && !instructionIs("JMZ"))
 												setValue('alu1', getValue('acc'));
-					
+												
 											delay = getValue('delay');
 											
 											setTimeout (function(){
@@ -866,9 +865,7 @@
 					
                     <rect x='0' y='34%' width='23.8%' height='10' />
                     <rect x='23.8%' y='34%' width='10' height='12%' />
-                    <rect x='40%' y='50%' width='7%' height='10' />
-                    <rect x='47%' y='50%' width='10px' height='32.25%' />
-                    <rect x='36%' y='81%' width='11.6%' height='10' />
+
                     <svg id="dataCornersRemover" class='cornersRemover' xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
                         <rect x='1' y='9' width='8' height='3' />
                         <rect x='0.5' y='93.5%' width='9' height='7' />
@@ -878,8 +875,7 @@
                         <rect x='10.75%' y='55.8%' width='8' height='10' />
                         <rect x='1' y='33.8%' width='8' height='14' />
                         <rect x='23.5%' y='34.05%' width='12' height='8.6' />
-                        <rect x='46.7%' y='50.06%' width='6' height='8' />
-                        <rect x='47%' y='80.8%' width='9' height='11' />
+
                     </svg>
                 </svg>
                 <svg id='addressBus' xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
@@ -898,7 +894,7 @@
                 </svg>
                 <svg id='alu' xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet"></svg>
                 <label id='irL'>IR</label>
-                <label id='decoder'>Decoder</label>
+                <label id='decoder'>Decodificador</label>
                 <label id='accL'>ACC</label>
                 <label id='pcL'>PC</label>
                 <label id='busL'>Bus datos / instrucciones</label>
