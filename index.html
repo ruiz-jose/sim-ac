@@ -5,6 +5,7 @@
         <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
         <meta name='viewport' content='width=device-width'>
         <title>TUDW-ARQ</title>
+		<!-- Autoplay is allowed. -->
         <style>
 		* {user-select: none; -ms-user-select: none; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;}
 		html, body {
@@ -422,17 +423,19 @@
 			document.getElementById('addressBus').style.fill = document.getElementById('addressCornersRemover').style.fill = colors[clr][1];
 		}
 		function initializeTone() {
-			sound_context = new AudioContext;
+			sound_context = new AudioContext();		
 			sound = sound_context.createOscillator();
 			sound.connect(sound_context.destination);
 		}
-		initializeTone();
+		
+		//initializeTone();
+		
 		function toggleSound() {
 			setTimeout(function(){
 				if (sound_status) {
 					document.getElementById('soundStatusImg').style.display = "none";
 					sound_status = false;
-					stopSound();
+					//stopSound();
 				}
 				else {
 					document.getElementById('soundStatusImg').style.display = "block";
@@ -472,8 +475,9 @@
 		}
 		function checkCorrectCmd(id) {
 			var val = getValue('cmd'+id+'text').substr(0, 4).toLowerCase();
-			var ind = getValue('cmd'+id+'text').substr(4, 7).toLowerCase();
-			
+			var ind = getValue('cmd'+id+'text').substr(4, 7).replace(/[\[\]]/g, "").toLowerCase();
+
+
 			if ((val == '' && ind == '') ||(val.indexOf("lda ") == 0
 				|| val.indexOf("sta ") == 0
 				|| val.indexOf("add ") == 0
@@ -504,6 +508,7 @@
 				return true;
 			}
 			else {
+				console.log("val", val, "ind", ind);
 				error("Incorrect syntax");
 				setValue('cmd'+id+'text','');
 			}
@@ -656,17 +661,17 @@
 											if (!instructionIs("HLT") && !instructionIs("NOP") && !instructionIs("JMZ") && !instructionIs("JMP")) {
 												
 												if (irLocContains('#')) { // #n
-													setValue('alu2', getValue('irLoc').replace("#",""));
+													setValue('alu2', getValue('irLoc').replace(/[\[\]]/g, "").replace("#",""));
 												}
 												else if (irLocContains('T')) { // t1 - t40
 													cType = 1;
-													setValue('alu2', (getValue('var'+getValue('irLoc')+'text')) ? getValue('var'+getValue('irLoc')+'text') : 0);
-													focusField('var'+getValue('irLoc')+'text');
+													setValue('alu2', (getValue('var'+getValue('irLoc')+'text').replace(/[\[\]]/g, "")) ? getValue('var'+getValue('irLoc').replace(/[\[\]]/g, "")+'text') : 0);
+													focusField('var'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
 												}
 												else { // x,y,z,w
 													cType = 2;
-													setValue('alu2', (getValue('value'+getValue('irLoc')+'text')) ? getValue('value'+getValue('irLoc')+'text') : 0);
-													focusField('value'+getValue('irLoc')+'text');
+													setValue('alu2', (getValue('value'+getValue('irLoc').replace(/[\[\]]/g, "").replace(/[\[\]]/g, "")+'text')) ? getValue('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text') : 0);
+													focusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
 												}
 											}
 											
@@ -684,9 +689,9 @@
 					
 												if (instructionIs("STA")) {
 													if (irLocContains('T'))
-														setValue('var'+getValue('irLoc')+'text', getValue('acc'));
+														setValue('var'+getValue('irLoc').replace(/[\[\]]/g, "")+'text', getValue('acc'));
 													else
-														setValue('value'+getValue('irLoc')+'text', getValue('acc'));
+														setValue('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text', getValue('acc'));
 												}
 												else if (instructionIs("JMP") || (instructionIs("JMZ") && getInt('acc') == 0)) {
 													focusField('pc');
@@ -697,7 +702,7 @@
 														unfocusField('var'+getValue('irLoc')+'text');
 														break;
 													case 2:
-														unfocusField('value'+getValue('irLoc')+'text');
+														unfocusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
 														break;
 												}
 												
@@ -706,8 +711,6 @@
 														case "=": setValue('acc', getInt('alu2') || 0); break;
 														case "+": setValue('acc', parseInt(getInt('alu2') + getInt('acc'))); break;
 														case "-": setValue('acc', parseInt(getInt('acc') - getInt('alu2'))); break;
-														case "*": setValue('acc', parseInt(getInt('alu2') * getInt('acc'))); break;
-														case "/": setValue('acc', parseInt(getInt('acc') / getInt('alu2'))); break;
 													}
 												
 												setValue('alu1', ''); setValue('alu2', ''); setValue('aluOp', '');
@@ -729,7 +732,7 @@
 														
 														busColor(0);
 														enableStartCmds();
-														stopSound();
+														//stopSound();
 														
 														running = false;
 														
@@ -831,7 +834,7 @@
                         <script>
                         for (var c = 0; c < cmd_max; c++)  {
                             if (c == 0) focusAttr = 'autofocus'; else focusAttr = '';
-                            document.write("<li>"+c+"<input type=text id='cmd"+c+"text' maxlength='10' placeholder='NOP' onchange='checkCorrectCmd("+c+");incrementCmdCounter()' "+focusAttr+"/></li>")
+                            document.write("<li>"+c+"<input type=text id='cmd"+c+"text' maxlength='10' placeholder='NOP' onchange='checkCorrectCmd("+c+");' "+focusAttr+"/></li>")
                         }
                         </script>
                     </ul>
