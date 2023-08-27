@@ -4,7 +4,7 @@
     <head>
         <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
         <meta name='viewport' content='width=device-width'>
-        <title>TUDW-ARQ</title>
+        <title>ARQ-ACC</title>
         <style>
 		* {user-select: none; -ms-user-select: none; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;}
 		html, body {
@@ -152,19 +152,25 @@
 		  transform: rotate(-90deg); -webkit-transform: rotate(-90deg); -ms-transform: rotate(-90deg);
 		}
 		label#irL {
-		  top: 11%; left: 3.5%;
+		  top: 11%; left: 6.5%;
 		}
 		label#aluL {
 		  top: -45px; left: 40%;
 		}
 		label#accL {
-		  top: 67%; left: 21%;
+		  top: 33%; left: 4%;
 		}
 		label#pcL {
 		  top: 49.6%; left: 55.5%;
 		}
+		label#mbrL {
+		  top: 2%; left: 57.5%;
+		}
+		label#marL {
+		  top: 24.6%; left: 57.5%;
+		}
 		label#busL {
-		  top: 30px; left: 40%;
+		  top: 31px; left: 38%;
 		}
 		label#addressesBusL {
 		  top: 18%; left: 46%;
@@ -173,7 +179,7 @@
 		 top: 12%; left: 66%;
 		}
 		label#decoder {
-		  top: 23%; left: 7.5%;
+		  top: 20%; left: 7.5%;
 		  background: #fff;
 		  padding: 3px 20px;
 		  border: 1px solid #333; border-radius: 5px;
@@ -187,23 +193,33 @@
 		  font-size: 30px; text-transform: uppercase; text-align: center;
 		}
 		#simulator input#irCmd {
-		  top: 10%; left: 6.5%;
-		  width: 11.5%;
+		  top: 10%; left: 10%;
+		  width: 10%;
 		  border-right: none; border-radius: 5px 0px 0px 5px;
 		}
 		#simulator input#irLoc {
-		  top: 10%; left: 18%;
-		  width: 11.5%;
+		  top: 10%; left: 20%;
+		  width: 10%;
 		  border-left: none; border-radius: 0px 5px 5px 0px;
 		}
 		#simulator input#acc {
-		  top: 66%; left: 26%;
-		  width: 11.8%;
+		  top: 27%; left: 0%;
+		  width: 8%;
+		  padding: 7px 10px;
+		}
+		#simulator input#mbr {
+		  top: 0%; left: 61.7%;
+		  width: 8%;
+		  padding: 7px 10px;
+		}
+		#simulator input#mar {
+		  top: 21%; left: 61.7%;
+		  width: 8%;
 		  padding: 7px 10px;
 		}
 		#simulator input#pc {
 		  top: 48%; left: 59%;
-		  width: 8.5%;
+		  width: 8%;
 		  padding: 7px 12px;
 		}
 		#simulator input#pcImprove {
@@ -599,22 +615,23 @@
 			function runCicle() {
 				pc = getValue('pc');
 				var delay = getValue('delay');
-				
+				changeFocus('pcImprove','pc');
 				focusField('cmd'+parseInt(pc/parseInt(imp))+'text');
 				
 				setTimeout (function(){
-					changeFocus('cmd'+parseInt(pc/parseInt(imp))+'text','irCmd');
-					
-					setValue('irCmd', getValue('cmd'+parseInt(pc/parseInt(imp))+'text').substr(0, 3).toUpperCase());
-					
-					if (!getValue('irCmd')) setValue('irCmd', 'NOP');
-				
+
+					setValue('mar', getValue('pc'));
+					changeFocus('pc','mar');
+			
+			
 					delay = getValue('delay');
 					
 					setTimeout (function(){
-						changeFocus('irCmd','irLoc');
-						setValue('irLoc', getValue('cmd'+parseInt(pc/parseInt(imp))+'text').substr(4).toUpperCase());
-						
+						changeFocus('mar','mbr');
+
+						setValue('mbr', getValue('cmd'+parseInt(pc/parseInt(imp))+'text').toUpperCase());
+
+												
 						setTimeout (function(){
 							
 							changeFocus('irLoc','pcImprove');
@@ -627,8 +644,24 @@
 								setValue('pc', getInt('pc') + parseInt(imp));
 					
 								delay = getValue('delay');
-									
+
 								setTimeout (function(){
+
+									changeFocus('cmd'+parseInt(pc/parseInt(imp))+'text','irCmd');
+						
+									setValue('irCmd', getValue('cmd'+parseInt(pc/parseInt(imp))+'text').substr(0, 3).toUpperCase());
+						
+									changeFocus('irCmd','irLoc');
+									
+									setValue('irLoc', getValue('cmd'+parseInt(pc/parseInt(imp))+'text').substr(4).toUpperCase());
+						
+									
+									if (!getValue('irCmd')) setValue('irCmd', 'NOP');
+
+									delay = getValue('delay');
+
+										
+									setTimeout (function(){
 									
 									changeFocus('pc','decoder');
 					
@@ -642,8 +675,8 @@
 											changeFocus('decoder','aluOp');
 										
 										switch (getValue('irCmd')) {
-											case "LDA": setValue('aluOp', "="); break;
-											case "STA": setValue('aluOp', "="); break;
+											//case "LDA": setValue('aluOp', "="); break;
+											//case "STA": setValue('aluOp', "="); break;
 											case "ADD": setValue('aluOp', "+"); break;
 											case "SUB": setValue('aluOp', "-"); break;										
 											case "HLT": stopMachine(2); break;
@@ -661,6 +694,7 @@
 												
 												if (irLocContains('#')) { // #n
 													setValue('alu2', getValue('irLoc').replace(/[\[\]]/g, "").replace("#",""));
+													console.log("imp", getValue('irLoc').replace(/[\[\]]/g, "").replace("#",""));
 												}
 												else if (irLocContains('T')) { // t1 - t40
 													cType = 1;
@@ -669,11 +703,29 @@
 												}
 												else { // x,y,z,w
 													cType = 2;
-													setValue('alu2', (getValue('value'+getValue('irLoc').replace(/[\[\]]/g, "").replace(/[\[\]]/g, "")+'text')) ? getValue('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text') : 0);
+													var dir = getValue('irLoc').replace(/[\[\]]/g, "");
+													var contenidoMD = (getValue('value'+dir.replace(/[\[\]]/g, "")+'text')) ? getValue('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text') : 0;
+													//setValue('alu2', contenidoMD);
 													focusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
+													
+													console.log("contenidoMD", contenidoMD);
+													console.log("dir", dir);
+													
+
 												}
 											}
-											
+											if (instructionIs("LDA")){
+												changeFocus('irLoc','mar');
+												setValue('mar', dir);
+												setTimeout (function(){
+													changeFocus('mar','mbr');
+													setValue('mbr', contenidoMD);
+												},delay);
+												changeFocus('mbr','acc');
+												setValue('acc', contenidoMD);
+												
+											}
+
 											if (instructionIs("STA"))
 												setValue('alu2', '');
 											
@@ -747,6 +799,7 @@
 										},delay);
 									},delay);
 								},delay);
+								},delay);
 							},delay);
 						},delay);
 					},delay);
@@ -801,7 +854,7 @@
 					</image>
 					<polygon points="76.5,706.2 127.6,706.2 127.6,441 439.1,441 439.1,331.8 321.7,331.8 321.7,71.9 638.3,71.9 638.3,331.8 500.4,331.8 500.4,435.8 822.2,435.8 822.2,706.2 883.5,706.2 883.5,888.1 663.9,888.1 663.9,716.6 709.8,716.6 735.4,716.6 735.4,529.4 500.4,529.4 500.4,695.8 597.5,695.8 597.5,888.1 372.7,888.1 372.7,706.2 444.3,706.2 444.3,529.3 199.1,529.3 199.1,695.8 285.9,695.8 285.9,888.1 76.5,888.1 "/>
                 </svg>
-                <span>Von Neumann Machine Simulator TUDW-ARQ</span>
+                <span>ARQ-ACC</span>
             </div>
             <ul>
                 <li onclick='showDialog("credits")'>Creditos</li>
@@ -853,9 +906,9 @@
             </div>
             <div id='simulator'>
 				<svg id='dataBus' xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-                    <rect x='0' y='0' width='10' height='94%'/>
-                    <rect x='0' y='0' width='90%' height='10'/>
-                    <rect x='0' y='94%' width='32.1%' height='10'/>
+                    <rect x='20' y='0' width='10' height='94%'/>
+                    <rect x='20' y='0' width='90%' height='10'/>
+                    <rect x='20' y='94%' width='30.8%' height='10'/>
                     <rect x='31.5%' y='46%' width='10' height='49.2%' />
                     <rect x='18.3%' y='0' width='10' height='14%' />
                     <rect x='36.5%' y='0' width='10px' height='48%' />
@@ -863,17 +916,17 @@
                     <rect x='10.7%' y='14%' width='10' height='43%' />
                     <rect x='10.7%' y='56.5%' width='20%' height='10' />
 					
-                    <rect x='0' y='34%' width='23.8%' height='10' />
+                    <rect x='20' y='34%' width='22.8%' height='10' />
                     <rect x='23.8%' y='34%' width='10' height='12%' />
 
                     <svg id="dataCornersRemover" class='cornersRemover' xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-                        <rect x='1' y='9' width='8' height='3' />
-                        <rect x='0.5' y='93.5%' width='9' height='7' />
+                        <rect x='21' y='9' width='8' height='3' />
+                        <rect x='20.5' y='93.5%' width='9' height='7' />
                         <rect x='31.4%' y='94.1%' width='11' height='8' />
                         <rect x='18.2%' y='1' width='15' height='8' />
                         <rect x='36.4%' y='1' width='15' height='8' />
                         <rect x='10.75%' y='55.8%' width='8' height='10' />
-                        <rect x='1' y='33.8%' width='8' height='14' />
+                        <rect x='21' y='33.8%' width='8' height='14' />
                         <rect x='23.5%' y='34.05%' width='12' height='8.6' />
 
                     </svg>
@@ -897,11 +950,15 @@
                 <label id='decoder'>Decodificador</label>
                 <label id='accL'>ACC</label>
                 <label id='pcL'>PC</label>
+				<label id='mbrL'>MBR</label>
+				<label id='marL'>MAR</label>
                 <label id='busL'>Bus datos / instrucciones</label>
                 <label id='addressesBusL' >Bus direccion</label>
                 <label id='ramL' class='rotated'>RAM</label>
                 <input type=text readonly id='irCmd'/>
                 <input type=text readonly id='irLoc'/>
+				<input type=text readonly id='mbr'/>
+				<input type=text readonly id='mar'/>
                 <input type=number value=0 id='acc'/>
                 <input type=number value=0 id='pc' min=0 max=9999 onchange="checkCorrectPC()"/>
                 <input id='pcImprove' disabled value='+ 1'/>
