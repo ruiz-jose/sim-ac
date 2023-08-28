@@ -627,6 +627,7 @@
 					
 					setTimeout (function(){
 						focusField('cmd'+parseInt(pc/parseInt(imp))+'text');
+						unfocusField('mar');
 					
 			
 					delay = getValue('delay');
@@ -652,7 +653,7 @@
 
 								setTimeout (function(){
 
-									
+									unfocusField('pc');
 									changeFocus('mbr','irLoc');
 									//changeFocus('irCmd','irLoc');
 									
@@ -672,6 +673,7 @@
 									setTimeout (function(){
 									
 									changeFocus('irCmd','decoder');
+									unfocusField('irLoc');
 					
 									delay = getValue('delay');
 									
@@ -694,7 +696,7 @@
 										
 										setTimeout (function(){
 											
-											if (!instructionIs("JMZ") && !instructionIs("JMP") && !instructionIs("STA")) changeFocus('aluOp','alu2');
+											//if (!instructionIs("JMZ") && !instructionIs("JMP") && !instructionIs("STA")) changeFocus('aluOp','alu2');
 											if (instructionIs("STA")) changeFocus('aluOp','acc');
 											
 											cType = 0;
@@ -724,14 +726,22 @@
 											}
 											if (instructionIs("LDA")){
 												setTimeout (function(){
-													changeFocus('irLoc','mar');
+													changeFocus('decoder','mar');
 													setValue('mar', dir);
-
+					
 													setTimeout (function(){
 														focusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
 														setTimeout (function(){
 															changeFocus('mar','mbr');
 															setValue('mbr', contenidoMD);
+															switch (cType) {
+																case 1:
+																	unfocusField('var'+getValue('irLoc')+'text');
+																	break;
+																case 2:
+																	unfocusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
+																	break;
+															}
 															setTimeout (function(){
 																changeFocus('mbr','acc');
 																setValue('acc', contenidoMD);
@@ -765,14 +775,7 @@
 													focusField('pc');
 													setValue('pc', getValue('irLoc'));
 												}
-												switch (cType) {
-													case 1:
-														unfocusField('var'+getValue('irLoc')+'text');
-														break;
-													case 2:
-														unfocusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
-														break;
-												}
+												
 												
 												if (!instructionIs("STA"))
 													switch (getValue('aluOp')) {
