@@ -4,6 +4,7 @@
     <head>
         <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
         <meta name='viewport' content='width=device-width'>
+		<meta name="google" content="notranslate">
         <title>ARQ-ACC</title>
         <style>
 		* {user-select: none; -ms-user-select: none; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;}
@@ -223,7 +224,7 @@
 		  padding: 7px 12px;
 		}
 		#simulator input#pcImprove {
-		  top: 34%; left: 64%;
+		  top: 38%; left: 62%;
 		  width: 4%;
 		  padding: 5px 10px;
 		  font-size: 23px;
@@ -616,21 +617,25 @@
 				pc = getValue('pc');
 				var delay = getValue('delay');
 				changeFocus('pcImprove','pc');
-				focusField('cmd'+parseInt(pc/parseInt(imp))+'text');
+				
 				
 				setTimeout (function(){
 
 					setValue('mar', getValue('pc'));
 					changeFocus('pc','mar');
-			
+					
+					
+					setTimeout (function(){
+						focusField('cmd'+parseInt(pc/parseInt(imp))+'text');
+					
 			
 					delay = getValue('delay');
 					
 					setTimeout (function(){
 						changeFocus('mar','mbr');
-
+					
 						setValue('mbr', getValue('cmd'+parseInt(pc/parseInt(imp))+'text').toUpperCase());
-
+						changeFocus('cmd'+parseInt(pc/parseInt(imp))+'text','mbr');
 												
 						setTimeout (function(){
 							
@@ -647,13 +652,16 @@
 
 								setTimeout (function(){
 
-									changeFocus('cmd'+parseInt(pc/parseInt(imp))+'text','irCmd');
-						
-									setValue('irCmd', getValue('cmd'+parseInt(pc/parseInt(imp))+'text').substr(0, 3).toUpperCase());
-						
-									changeFocus('irCmd','irLoc');
+									
+									changeFocus('mbr','irLoc');
+									//changeFocus('irCmd','irLoc');
 									
 									setValue('irLoc', getValue('cmd'+parseInt(pc/parseInt(imp))+'text').substr(4).toUpperCase());
+									
+									//changeFocus('cmd'+parseInt(pc/parseInt(imp))+'text','irCmd');
+						
+									setValue('irCmd', getValue('cmd'+parseInt(pc/parseInt(imp))+'text').substr(0, 3).toUpperCase());
+													
 						
 									
 									if (!getValue('irCmd')) setValue('irCmd', 'NOP');
@@ -663,7 +671,7 @@
 										
 									setTimeout (function(){
 									
-									changeFocus('pc','decoder');
+									changeFocus('irCmd','decoder');
 					
 									delay = getValue('delay');
 									
@@ -672,7 +680,7 @@
 										if (instructionIs("JMZ") || instructionIs("JMP"))
 											unfocusField('decoder');
 										else
-											changeFocus('decoder','aluOp');
+											//changeFocus('decoder','aluOp');
 										
 										switch (getValue('irCmd')) {
 											//case "LDA": setValue('aluOp', "="); break;
@@ -706,7 +714,7 @@
 													var dir = getValue('irLoc').replace(/[\[\]]/g, "");
 													var contenidoMD = (getValue('value'+dir.replace(/[\[\]]/g, "")+'text')) ? getValue('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text') : 0;
 													//setValue('alu2', contenidoMD);
-													focusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
+
 													
 													console.log("contenidoMD", contenidoMD);
 													console.log("dir", dir);
@@ -715,15 +723,24 @@
 												}
 											}
 											if (instructionIs("LDA")){
-												changeFocus('irLoc','mar');
-												setValue('mar', dir);
 												setTimeout (function(){
-													changeFocus('mar','mbr');
-													setValue('mbr', contenidoMD);
+													changeFocus('irLoc','mar');
+													setValue('mar', dir);
+
+													setTimeout (function(){
+														focusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
+														setTimeout (function(){
+															changeFocus('mar','mbr');
+															setValue('mbr', contenidoMD);
+															setTimeout (function(){
+																changeFocus('mbr','acc');
+																setValue('acc', contenidoMD);
+														
+															},delay);
+														},delay);
+													},delay);
+													
 												},delay);
-												changeFocus('mbr','acc');
-												setValue('acc', contenidoMD);
-												
 											}
 
 											if (instructionIs("STA"))
@@ -736,7 +753,7 @@
 											
 											setTimeout (function(){
 												
-												if (!instructionIs("JMZ") && !instructionIs("JMP") && !instructionIs("STA")) changeFocus('alu2','acc');
+												//if (!instructionIs("JMZ") && !instructionIs("JMP") && !instructionIs("STA")) changeFocus('alu2','acc');
 					
 												if (instructionIs("STA")) {
 													if (irLocContains('T'))
@@ -802,6 +819,7 @@
 								},delay);
 							},delay);
 						},delay);
+					},delay);
 					},delay);
 				},delay);
 			}
@@ -935,7 +953,8 @@
                     <rect x='26%' y='14%' width='10px' height='13%' />
                     <rect x='26%' y='27%' width='45%' height='10' />
                     <rect x='50.5%' y='27.6%' width='10px' height='40%' />
-                    <rect x='65%' y='27.6%' width='10px' height='40%'/>
+                    <rect x='65%' y='47.6%' width='10px' height='20%'/>
+					<rect x='62%' y='45.6%' width='10px' height='15%'/>
                     <rect x='50.5%' y='66.65%' width='15.1%' height='10' />
                     <svg id="addressCornersRemover" class='cornersRemover' xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
                         <rect x='26.05%' y='26.3%' width='8' height='10' />
