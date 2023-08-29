@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html xmlns='http://www.w3.org/1999/xhtml'>
     <head>
         <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
@@ -659,7 +658,7 @@
 									
 									setValue('irLoc', getValue('cmd'+parseInt(pc/parseInt(imp))+'text').substr(4).toUpperCase());
 									
-									//changeFocus('cmd'+parseInt(pc/parseInt(imp))+'text','irCmd');
+									changeFocus('cmd'+parseInt(pc/parseInt(imp))+'text','irCmd');
 						
 									setValue('irCmd', getValue('cmd'+parseInt(pc/parseInt(imp))+'text').substr(0, 3).toUpperCase());
 													
@@ -684,20 +683,14 @@
 										else
 											//changeFocus('decoder','aluOp');
 										
-										switch (getValue('irCmd')) {
-											//case "LDA": setValue('aluOp', "="); break;
-											//case "STA": setValue('aluOp', "="); break;
-											case "ADD": setValue('aluOp', "+"); break;
-											case "SUB": setValue('aluOp', "-"); break;										
-											case "HLT": stopMachine(2); break;
-										}
+										
 					
 										delay = getValue('delay');
 										
 										setTimeout (function(){
 											
 											//if (!instructionIs("JMZ") && !instructionIs("JMP") && !instructionIs("STA")) changeFocus('aluOp','alu2');
-											if (instructionIs("STA")) changeFocus('aluOp','acc');
+											//if (instructionIs("STA")) changeFocus('aluOp','acc');
 											
 											cType = 0;
 											if (!instructionIs("HLT") && !instructionIs("NOP") && !instructionIs("JMZ") && !instructionIs("JMP")) {
@@ -725,10 +718,12 @@
 												}
 											}
 											if (instructionIs("LDA")){
+												changeFocus('decoder','mar');
 												setTimeout (function(){
-													changeFocus('decoder','mar');
+													//focusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
 													setValue('mar', dir);
-					
+													
+													
 													setTimeout (function(){
 														focusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
 														setTimeout (function(){
@@ -752,19 +747,91 @@
 													
 												},delay);
 											}
+											if (instructionIs("ADD") || instructionIs("SUB")){
+												changeFocus('decoder','mar');
+												setTimeout (function(){
+													
+													setValue('mar', dir);
+					
+													setTimeout (function(){
+														focusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
+														setTimeout (function(){
+															changeFocus('mar','mbr');
+															setValue('mbr', contenidoMD);
+															switch (cType) {
+																case 1:
+																	unfocusField('var'+getValue('irLoc')+'text');
+																	break;
+																case 2:
+																	unfocusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
+																	break;
+															}
+															setTimeout (function(){
+																changeFocus('mbr','alu2');
+																setValue('alu2', contenidoMD);
+																setTimeout (function(){
+																	changeFocus('acc','alu1');
+																	setValue('alu1', getValue('acc'));
+																	switch (getValue('irCmd')) {
+																		//case "LDA": setValue('aluOp', "="); break;
+																		//case "STA": setValue('aluOp', "="); break;
+																		case "ADD": setValue('aluOp', "+"); break;
+																		case "SUB": setValue('aluOp', "-"); break;										
+																		case "HLT": stopMachine(2); break;
+																	}
+																	setTimeout (function(){
+																		changeFocus('alu2','aluOp');
+																		changeFocus('alu1','aluOp');
+																		switch (getValue('aluOp')) {
+																			//case "=": setValue('acc', getInt('alu2') || 0); break;
+																			case "+": setValue('acc', parseInt(getInt('alu1') + getInt('alu2'))); break;
+																			case "-": setValue('acc', parseInt(getInt('alu1') - getInt('alu2'))); break;
+																		}
+																		setTimeout (function(){
+																			changeFocus('aluOp', 'acc');
+																			setValue('alu1', ''); setValue('alu2', ''); setValue('aluOp', '');
+																		},delay);
+																	},delay);
+																},delay);
+															},delay);													
+														},delay);
+													},delay);													
+												},delay);
+											}
+											if (instructionIs("STA")){
+												changeFocus('decoder','mar');
+												setTimeout (function(){
+													
+													setValue('mar', dir);
+													setTimeout (function(){
+													    changeFocus('decoder','acc');
+														setTimeout (function(){
+															changeFocus('acc','mbr');
+															setValue('mbr', getValue('acc'));
+															setTimeout (function(){
+																if (irLocContains('T'))
+																	setValue('var'+getValue('irLoc').replace(/[\[\]]/g, "")+'text', getValue('mbr'));
+																else
+																	setValue('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text', getValue('mbr'));
+																
+																focusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
+															},delay);	
+														},delay);																												
+													},delay);
+												},delay);
 
-											if (instructionIs("STA"))
+											}
+											/*if (instructionIs("STA"))
 												setValue('alu2', '');
 											
 											else if (!instructionIs("LDA") && !instructionIs("JMP") && !instructionIs("JMZ"))
-												setValue('alu1', getValue('acc'));
+												setValue('alu1', getValue('acc'));*/
 												
-											delay = getValue('delay');
+										
 											
-											setTimeout (function(){
 												
 												//if (!instructionIs("JMZ") && !instructionIs("JMP") && !instructionIs("STA")) changeFocus('alu2','acc');
-					
+												/*
 												if (instructionIs("STA")) {
 													if (irLocContains('T'))
 														setValue('var'+getValue('irLoc').replace(/[\[\]]/g, "")+'text', getValue('acc'));
@@ -775,24 +842,24 @@
 													focusField('pc');
 													setValue('pc', getValue('irLoc'));
 												}
+												*/
 												
-												
-												if (!instructionIs("STA"))
+												/*if (!instructionIs("STA"))
 													switch (getValue('aluOp')) {
 														case "=": setValue('acc', getInt('alu2') || 0); break;
 														case "+": setValue('acc', parseInt(getInt('alu2') + getInt('acc'))); break;
 														case "-": setValue('acc', parseInt(getInt('acc') - getInt('alu2'))); break;
 													}
-												
-												setValue('alu1', ''); setValue('alu2', ''); setValue('aluOp', '');
-												if (instructionIs("STA")) { changeFocus('acc','alu2'); setValue('alu2', getValue('acc'))}
+												*/
+												//setValue('alu1', ''); setValue('alu2', ''); setValue('aluOp', '');
+												//if (instructionIs("STA")) { changeFocus('acc','alu2'); setValue('alu2', getValue('acc'))}
 					
 												delay = getValue('delay');
 					
 												setTimeout (function(){
 													
-													unfocusField('pc','acc','alu2');
-													setValue('alu2', '');
+													unfocusField('pc','acc','alu2', 'alu1', 'decoder', 'mar', 'mbr');
+													//setValue('alu2', '');
 													
 													if (cmd == 'step' || stop_status == 1 || stop_status == 2) {
 														
@@ -815,7 +882,7 @@
 													delay = getValue('delay');
 													
 												},delay);
-											},delay);
+											
 										},delay);
 									},delay);
 								},delay);
