@@ -20,8 +20,17 @@ Objetivo: comprender el funcionamiento de la computadora a traves de la arquitec
 ## Arquitectura_Acumulador 
 
 La arquitectura del CPU permite gestionar un bus de direcciones de 5 bits = 2**5 = 32 posiciones y cada posicion de memoria contiene un 1 byte. El bus de datos de 8 bits (1 byte). Ergo, la CPU procesa datos de 1 byte (8 bits), puede acceder solo 32 bytes de RAM, por lo tanto, el programa debe caber en 32 bytes y esto incluye cualquier variable que utilice.
-En base EaterEmulator emulates [Ben Eater's](https://www.youtube.com/channel/UCS0N5baNlQWJCUrhCEo8WlA) trabajaremos con python para aprender la arquitectura acumulador de 8 bits.
 
+
+# logisim-cpu8bit Harvard-Logisim
+<img src="./sim-AC-Harvard-logisim.png" >
+
+# circuitverse-cpu8bit  (on-line)
+<img src="./AC-7.png" >
+https://circuitverse.org/simulator/embed/sim-ac-harvard
+
+Basado en:
+En base EaterEmulator emulates [Ben Eater's](https://www.youtube.com/channel/UCS0N5baNlQWJCUrhCEo8WlA) trabajaremos con python para aprender la arquitectura acumulador de 8 bits.
 
 La implementación del cpu de Ben Eater:
 https://eater.net/8bit/control
