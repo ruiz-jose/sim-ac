@@ -1,6 +1,6 @@
-# Aprender Arquitectura programando!!
+# Aprender arquitectura de compputadoras!!
 
-Objetivo: comprender como funcionamiento de la arquitectura acumulador (programando)
+Objetivo: comprender el funcionamiento de la computadora a traves de la arquitectura acumulador
 
 ## Tabla de contenido
 
@@ -17,20 +17,67 @@ Objetivo: comprender como funcionamiento de la arquitectura acumulador (programa
 * [Para hacer2](#Para_hacer2) 
 
 
-
 ## Arquitectura_Acumulador 
 
-para aprender la arquitectura acumulador de 8 bits.
-La CPU procesa datos de 1 byte (8 bits), puede acceder solo 64 bytes de RAM, por lo tanto, el programa debe caber en 64 bytes y esto incluye cualquier variable que utilice.
-La arquitectura del CPU permite gestionar un bus de direcciones de 6 bits = 2**6 = 64 posiciones y cada posicion de memoria contiene un 1 byte. El bus de datos de 8 bits (1 byte).
+La arquitectura del CPU permite gestionar un bus de direcciones de 5 bits = 2**5 = 32 posiciones y cada posicion de memoria contiene un 1 byte. El bus de datos de 8 bits (1 byte). Ergo, la CPU procesa datos de 1 byte (8 bits), puede acceder solo 32 bytes de RAM, por lo tanto, el programa debe caber en 32 bytes y esto incluye cualquier variable que utilice.
+En base EaterEmulator emulates [Ben Eater's](https://www.youtube.com/channel/UCS0N5baNlQWJCUrhCEo8WlA) trabajaremos con python para aprender la arquitectura acumulador de 8 bits.
 
 
+La implementación del cpu de Ben Eater:
+https://eater.net/8bit/control
+
+Hecha en Python se copio descaradamente de este link:
+https://github.com/jaychandra86/EaterEmulator
 
 En base al simulador Von Neumann Machine Simulator de Autor: Lorenzo Ganni
 
 Link simulador: https://ruiz-jose.github.io/arq-acc/
 
 Link codigo fuente: https://github.com/ruiz-jose/arq-acc
+
+
+## Usando_ensamblador
+
+Este proyecto incluye un Ensamblador que admite algunas de las capacidades estándar que esperaría encontrar en un ensamblador.
+
+Cree un archivo .asm y escriba su programa en ensamblador. 
+El programa puede tener un maximo de 32 líneas.
+
+El ensamblador se encarga de traducir el programa a codigo maquina que entiende el CPU.
+
+Por ejemplo: si desea escribir un programa que sume 5 + 3, debería ser algo como esto
+
+``` asm
+0 LDA [4]
+1 ADD [5]
+2 STA [6]
+3 HLT
+4 2
+5 3
+6 0
+```
+
+En la `línea 0`, podemos ver `LDA [4]`, esto significa que carga el valor de la `dirección 4` en el `registro AC`. Esta `dirección 4` está en la `línea 4` que tiene un valor de `52`. Por lo tanto, carga `2` en el `registro AC`.
+
+En la `línea 1`, tenemos `ADD [5]`, esto sumará el contenido de la `dirección 5` con el `registro AC`, luego  el resultado queda almacenado en el `registro AC` será `5`.
+
+En la `línea 2`, tenemos `STA 6`, esto almacenará el contenido `registro AC` en la `dirección 6`.
+
+En la `línea 3`, tenemos `HLT`, esto detiene el programa.
+
+
+### Repertorio_de_instrucciones
+
+| OpCode | Nemonico     | Acción
+|--------|--------------|------------
+| 000    | **ADD** xxx  | Sumar el registro AC con el contenido de memoria xxx
+| 001    | **SUB** xxx  | Restar el registro AC con el contenido de memoria xxx
+| 010    | **LDA** xxx  | Cargar el contenido de la dirección de memoria xxx en el registro AC
+| 011    | **STA** xxx  | Almacenar el contenido del registro AC en la dirección de memoria xxx
+| 100    | **JMP** xxx  | Saltar a la dirección de memoria
+| 101    | **JZ** xxx  | Saltar a la dirección de memoria, Si Z= 1
+| 110    | **JC** xxx  | Saltar a la dirección de memoria, Si C= 1
+| 111    | **HLT**      | Detiene la ejecución
 
 
 
