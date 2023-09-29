@@ -157,18 +157,15 @@
 		label#aluL {
 		  top: -45px; left: 40%;
 		}
+		label#fzL {
+		  top: 63%; left: 36%;
+		}
 		label#accL {
 		  top: 33%; left: 4%;
 		}
 		label#pcL {
 		  top: 49.6%; left: 55.5%;
-		}
-		label#mbrL {
-		  top: 2%; left: 57.5%;
-		}
-		label#marL {
-		  top: 24.6%; left: 57.5%;
-		}
+		}		
 		label#busL {
 		  top: 31px; left: 38%;
 		}
@@ -207,16 +204,6 @@
 		  width: 8%;
 		  padding: 7px 10px;
 		}
-		#simulator input#mbr {
-		  top: 0%; left: 61.7%;
-		  width: 8%;
-		  padding: 7px 10px;
-		}
-		#simulator input#mar {
-		  top: 21%; left: 61.7%;
-		  width: 8%;
-		  padding: 7px 10px;
-		}
 		#simulator input#pc {
 		  top: 48%; left: 59%;
 		  width: 8%;
@@ -224,6 +211,12 @@
 		}
 		#simulator input#pcImprove {
 		  top: 38%; left: 62%;
+		  width: 4%;
+		  padding: 5px 10px;
+		  font-size: 23px;
+		}
+		#simulator input#fz {
+		  top: 58%; left: 36%;
 		  width: 4%;
 		  padding: 5px 10px;
 		  font-size: 23px;
@@ -619,267 +612,301 @@
 				
 				setTimeout (function(){
 
-					setValue('mar', getValue('pc'));
-					changeFocus('pc','mar');
-					
-					delay = getValue('delay');
+					//setValue('mar', getValue('pc'));
+					//changeFocus('pc','mar');
+
 					setTimeout (function(){
 						focusField('cmd'+parseInt(pc/parseInt(imp))+'text');
-						unfocusField('mar');
+						//unfocusField('mar');
 					
-			
-					delay = getValue('delay');
-					
-					setTimeout (function(){
-						changeFocus('mar','mbr');
-					
-						setValue('mbr', getValue('cmd'+parseInt(pc/parseInt(imp))+'text').toUpperCase());
-						changeFocus('cmd'+parseInt(pc/parseInt(imp))+'text','mbr');
-
-						delay = getValue('delay');
-												
 						setTimeout (function(){
-							
-							changeFocus('irLoc','pcImprove');
-					
-							delay = getValue('delay');
-					
+						//	changeFocus('mar','mbr');
+
+						//	setValue('mbr', getValue('cmd'+parseInt(pc/parseInt(imp))+'text').toUpperCase());
+						//	changeFocus('cmd'+parseInt(pc/parseInt(imp))+'text','mbr');
+							//if (!getValue('mbr')) setValue('mbr', 'NOP');
+												
 							setTimeout (function(){
 								
-								changeFocus('pcImprove','pc');
-								setValue('pc', getInt('pc') + parseInt(imp));
-					
-								delay = getValue('delay');
-
+								changeFocus('irLoc','pcImprove');
+						
 								setTimeout (function(){
-
-									unfocusField('pc');
-									changeFocus('mbr','irLoc');
-																		
-									setValue('irLoc', getValue('cmd'+parseInt(pc/parseInt(imp))+'text').substr(4).toUpperCase());
 									
-									changeFocus('cmd'+parseInt(pc/parseInt(imp))+'text','irCmd');
-						
-									setValue('irCmd', getValue('cmd'+parseInt(pc/parseInt(imp))+'text').substr(0, 3).toUpperCase());
-													
-									if (!getValue('irCmd')) setValue('irCmd', 'NOP');
+									changeFocus('pcImprove','pc');
+									setValue('pc', getInt('pc') + parseInt(imp));
 
-									delay = getValue('delay');
 
-										
 									setTimeout (function(){
-									
-										changeFocus('irCmd','decoder');
-										unfocusField('irLoc');
-						
-										delay = getValue('delay');
+
+										unfocusField('pc');
+									//	changeFocus('mbr','irLoc');
+																			
+										setValue('irLoc', getValue('cmd'+parseInt(pc/parseInt(imp))+'text').substr(4).toUpperCase());
 										
-										cType = 0;
-										if (!instructionIs("HLT") && !instructionIs("NOP") && !instructionIs("JMZ") && !instructionIs("JMP")) {
+										changeFocus('cmd'+parseInt(pc/parseInt(imp))+'text','irCmd');
+							
+										setValue('irCmd', getValue('cmd'+parseInt(pc/parseInt(imp))+'text').substr(0, 3).toUpperCase());
+														
+										if (!getValue('irCmd')) setValue('irCmd', 'NOP');
 											
-											if (irLocContains('[') && irLocContains(']')) { // #n
-												console.log("imp", getValue('irLoc').replace(/[\[\]]/g, ""));
-												focusField('var'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
-											}
-											else if (irLocContains('T')) { // t1 - t40
-												cType = 1;
-												setValue('alu2', (getValue('var'+getValue('irLoc')+'text').replace(/[\[\]]/g, "")) ? getValue('var'+getValue('irLoc').replace(/[\[\]]/g, "")+'text') : 0);
-												focusField('var'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
-											}
-											else { // x,y,z,w
-												cType = 2;
-												var dir = getValue('irLoc').replace(/[\[\]]/g, "");
-												var contenidoMD = (getValue('value'+dir.replace(/[\[\]]/g, "")+'text')) ? getValue('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text') : 0;
-												//setValue('alu2', contenidoMD);
-
+										setTimeout (function(){
+										
+											changeFocus('irCmd','decoder');
+											unfocusField('irLoc');
+										
+											cType = 0;
+											if (!instructionIs("HLT") && !instructionIs("NOP") && !instructionIs("JMZ") && !instructionIs("JMP")) {
 												
-												//console.log("contenidoMD", contenidoMD);
-												//console.log("dir", dir);
-												
-
-											}
-										}
-										if (instructionIs("LDA")){
-											changeFocus('decoder','mar');
-											setTimeout (function(){
-												//focusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
-												setValue('mar', dir);
-												
-												
-												setTimeout (function(){
-													//focusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
-													setTimeout (function(){
-														changeFocus('mar','mbr');
-														setValue('mbr', contenidoMD);
-														switch (cType) {
-															case 1:
-																unfocusField('var'+getValue('irLoc')+'text');
-																break;
-															case 2:
-																unfocusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
-																break;
-														}
-														setTimeout (function(){
-															changeFocus('mbr','acc');
-															setValue('acc', contenidoMD);
+												if (irLocContains('[') && irLocContains(']')) { // #n
+													var dir = getValue('irLoc').replace(/[\[\]]/g, "");
+													var contenidoMD = (getValue('value'+dir.replace(/[\[\]]/g, "")+'text')) ? getValue('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text') : 0;
 													
-														},delay);
-													},delay);
-												},delay);
-												
-											},delay);
-										}
-										if (instructionIs("ADD") || instructionIs("SUB")){
-											changeFocus('decoder','mar');
-											setTimeout (function(){
-												
-												setValue('mar', dir);
-				
-												setTimeout (function(){
-													focusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
-													setTimeout (function(){
-														changeFocus('mar','mbr');
-														setValue('mbr', contenidoMD);
-														switch (cType) {
-															case 1:
-																unfocusField('var'+getValue('irLoc')+'text');
-																break;
-															case 2:
-																unfocusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
-																break;
-														}
+													//console.log("imp", getValue('irLoc').replace(/[\[\]]/g, ""));
+													//focusField('var'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
+												}
+												else if (irLocContains('T')) { // t1 - t40
+													cType = 1;
+													setValue('alu2', (getValue('var'+getValue('irLoc')+'text').replace(/[\[\]]/g, "")) ? getValue('var'+getValue('irLoc').replace(/[\[\]]/g, "")+'text') : 0);
+													//focusField('var'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
+												}
+												else { // constantes
+													cType = 2;
+													var contenidoMD = getValue('irLoc');
+													//setValue('alu2', contenidoMD);
+													var valoresAceptados = /^[0-9]+$/;
+													if (contenidoMD.match(valoresAceptados)) {
+														console.log('Es un número');
+														changeFocus('decoder','acc');
+														setValue('acc', contenidoMD);
+														//console.log("contenidoMD", contenidoMD);
+														//console.log("dir", dir);
 														setTimeout (function(){
-															changeFocus('mbr','alu2');
-															setValue('alu2', contenidoMD);
-															setTimeout (function(){
-																changeFocus('acc','alu1');
-																setValue('alu1', getValue('acc'));
-																switch (getValue('irCmd')) {
-																	//case "LDA": setValue('aluOp', "="); break;
-																	//case "STA": setValue('aluOp', "="); break;
-																	case "ADD": setValue('aluOp', "+"); break;
-																	case "SUB": setValue('aluOp', "-"); break;										
-																	case "HLT": stopMachine(2); break;
+														
+															unfocusField('pc','acc','alu2', 'alu1', 'decoder');
+															console.log("entro");
+															if (cmd == 'step' || stop_status == 1 || stop_status == 2) {
+																
+																if (stop_status == 1) {
+																	setValue('pc', 0);
+																	setValue('acc', 0);
 																}
+																
+																busColor(0);
+																enableStartCmds();
+																//stopSound();
+																
+																running = false;
+																
+																return;
+															}
+															else
+																runCicle();								
+
+														},delay);
+													}else {
+														var dir = getValue('irLoc').replace(/[\[\]]/g, "");
+														var contenidoMD = (getValue('value'+dir.replace(/[\[\]]/g, "")+'text')) ? getValue('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text') : 0;
+														cType = 0;
+													
+													}
+												}
+											}
+											if (instructionIs("NOP") ) {
+												setTimeout (function(){
+														
+													unfocusField('pc','acc','alu2', 'alu1', 'decoder');
+													console.log("entro");
+													if (cmd == 'step' || stop_status == 1 || stop_status == 2) {
+														
+														if (stop_status == 1) {
+															setValue('pc', 0);
+															setValue('acc', 0);
+														}
+														
+														busColor(0);
+														enableStartCmds();
+														//stopSound();
+														
+														running = false;
+														
+														return;
+													}
+													else
+														runCicle();								
+
+												},delay);
+											}
+											
+											if (instructionIs("LDA") && cType === 0){
+												setTimeout (function(){
+													//changeFocus('decoder','mar');
+													//setValue('mar', dir);
+													setTimeout (function(){
+														focusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
+														
+																																							
+														setTimeout (function(){
+															//changeFocus('mar','mbr');
+															setTimeout (function(){
+															//	changeFocus('mar','mbr');
+															//	setValue('mbr', contenidoMD);
+																unfocusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
+																
 																setTimeout (function(){
-																	changeFocus('alu2','aluOp');
-																	changeFocus('alu1','aluOp');
-																	switch (getValue('aluOp')) {
-																		//case "=": setValue('acc', getInt('alu2') || 0); break;
-																		case "+": setValue('acc', parseInt(getInt('alu1') + getInt('alu2'))); break;
-																		case "-": setValue('acc', parseInt(getInt('alu1') - getInt('alu2'))); break;
-																	}
+															//		changeFocus('mbr','acc');
+																	setValue('acc', contenidoMD);
 																	setTimeout (function(){
-																		changeFocus('aluOp', 'acc');
-																		setValue('alu1', ''); setValue('alu2', ''); setValue('aluOp', '');
+													
+																		unfocusField('pc','acc','alu2', 'alu1', 'decoder');
+																		console.log("entro");
+																		if (cmd == 'step' || stop_status == 1 || stop_status == 2) {
+																			
+																			if (stop_status == 1) {
+																				setValue('pc', 0);
+																				setValue('acc', 0);
+																			}
+																			
+																			busColor(0);
+																			enableStartCmds();
+																			//stopSound();
+																			
+																			running = false;
+																			
+																			return;
+																		}
+																		else
+																			runCicle();								
+
 																	},delay);
+																
 																},delay);
 															},delay);
 														},delay);													
 													},delay);
-												},delay);													
-											},delay);
-										}
-										if (instructionIs("STA")){
-											changeFocus('decoder','mar');
-											setTimeout (function(){
-												
-												setValue('mar', dir);
-												setTimeout (function(){
-													changeFocus('decoder','acc');
-													setTimeout (function(){
-														changeFocus('acc','mbr');
-														setValue('mbr', getValue('acc'));
-														setTimeout (function(){
-															if (irLocContains('T'))
-																setValue('var'+getValue('irLoc').replace(/[\[\]]/g, "")+'text', getValue('mbr'));
-															else
-																setValue('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text', getValue('mbr'));
-															
-															focusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
-														},delay);	
-													},delay);																												
 												},delay);
-											},delay);
+											}
+											if (instructionIs("ADD") || instructionIs("SUB")){
+												//changeFocus('decoder','mar');
+												setTimeout (function(){
+													
+													//setValue('mar', dir);
+					
+													setTimeout (function(){
+														focusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
+														setTimeout (function(){
+															//changeFocus('mar','mbr');
+															//setValue('mbr', contenidoMD);
+															unfocusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
+															
+															setTimeout (function(){
+																//changeFocus('mbr','alu2');
+																setValue('alu2', contenidoMD);
+																setTimeout (function(){
+																	changeFocus('acc','alu1');
+																	setValue('alu1', getValue('acc'));
+																	switch (getValue('irCmd')) {
+																		case "ADD": setValue('aluOp', "+"); break;
+																		case "SUB": setValue('aluOp', "-"); break;										
+																		case "HLT": stopMachine(2); break;
+																	}
+																	setTimeout (function(){
+																		changeFocus('alu2','aluOp');
+																		changeFocus('alu1','aluOp');
+																		switch (getValue('aluOp')) {
+																			//case "=": setValue('acc', getInt('alu2') || 0); break;
+																			case "+": setValue('acc', parseInt(getInt('alu1') + getInt('alu2'))); break;
+																			case "-": setValue('acc', parseInt(getInt('alu1') - getInt('alu2'))); break;
+																		}
+																		setTimeout (function(){
+																			changeFocus('aluOp', 'acc');
+																			setValue('alu1', ''); setValue('alu2', ''); setValue('aluOp', '');
+																			setTimeout (function(){
+														
+																				unfocusField('pc','acc','alu2', 'alu1', 'decoder');
+																				console.log("entro");
+																				if (cmd == 'step' || stop_status == 1 || stop_status == 2) {
+																					
+																					if (stop_status == 1) {
+																						setValue('pc', 0);
+																						setValue('acc', 0);
+																					}
+																					
+																					busColor(0);
+																					enableStartCmds();
+																					//stopSound();
+																					
+																					running = false;
+																					
+																					return;
+																				}
+																				else
+																					runCicle();								
 
-										}
-								
-											/*if (instructionIs("JMZ") || instructionIs("JMP"))
-												unfocusField('decoder');
-											else
-												changeFocus('decoder','aluOp');
-											*/
-											//if (!instructionIs("JMZ") && !instructionIs("JMP") && !instructionIs("STA")) changeFocus('aluOp','alu2');
-											//if (instructionIs("STA")) changeFocus('aluOp','acc');
-										
-												/*if (instructionIs("STA"))
-													setValue('alu2', '');
-												
-												else if (!instructionIs("LDA") && !instructionIs("JMP") && !instructionIs("JMZ"))
-													setValue('alu1', getValue('acc'));*/
+																			},delay);																
+																		
+																		},delay);
+																	},delay);
+																},delay);
+															},delay);													
+														},delay);
+													},delay);													
+												},delay);
+											}
+											if (instructionIs("STA")){
+												//changeFocus('decoder','mar');
+												setTimeout (function(){
 													
-											
-												
-													
-													//if (!instructionIs("JMZ") && !instructionIs("JMP") && !instructionIs("STA")) changeFocus('alu2','acc');
-													/*
-													if (instructionIs("STA")) {
-														if (irLocContains('T'))
-															setValue('var'+getValue('irLoc').replace(/[\[\]]/g, "")+'text', getValue('acc'));
-														else
-															setValue('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text', getValue('acc'));
-													}
-													else if (instructionIs("JMP") || (instructionIs("JMZ") && getInt('acc') == 0)) {
-														focusField('pc');
-														setValue('pc', getValue('irLoc'));
-													}
-													*/
-													
-													/*if (!instructionIs("STA"))
-														switch (getValue('aluOp')) {
-															case "=": setValue('acc', getInt('alu2') || 0); break;
-															case "+": setValue('acc', parseInt(getInt('alu2') + getInt('acc'))); break;
-															case "-": setValue('acc', parseInt(getInt('acc') - getInt('alu2'))); break;
-														}
-													*/
-													//setValue('alu1', ''); setValue('alu2', ''); setValue('aluOp', '');
-													//if (instructionIs("STA")) { changeFocus('acc','alu2'); setValue('alu2', getValue('acc'))}
-						
-											delay = getValue('delay');
-				
-											setTimeout (function(){
-												
-												unfocusField('pc','acc','alu2', 'alu1', 'decoder', 'mar', 'mbr');
+												//	setValue('mar', dir);
+													setTimeout (function(){
+														changeFocus('decoder','acc');
+														setTimeout (function(){
+															//changeFocus('acc','mbr');
+															//setValue('mbr', getValue('acc'));
+															setTimeout (function(){
+																if (irLocContains('T'))
+																	setValue('var'+getValue('irLoc').replace(/[\[\]]/g, "")+'text',getValue('acc'));
+																else
+																	setValue('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text', getValue('acc'));
+																
+																focusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
+																setTimeout (function(){
+																	unfocusField('value'+getValue('irLoc').replace(/[\[\]]/g, "")+'text');
+																	unfocusField('pc','acc','alu2', 'alu1', 'decoder');
+																	console.log("entro");
+																	if (cmd == 'step' || stop_status == 1 || stop_status == 2) {
+																		
+																		if (stop_status == 1) {
+																			setValue('pc', 0);
+																			setValue('acc', 0);
+																		}
+																		
+																		busColor(0);
+																		enableStartCmds();
+																		//stopSound();
+																		
+																		running = false;
+																		
+																		return;
+																	}
+																	else
+																		runCicle();								
 
-												
-												if (cmd == 'step' || stop_status == 1 || stop_status == 2) {
-													
-													if (stop_status == 1) {
-														setValue('pc', 0);
-														setValue('acc', 0);
-													}
-													
-													busColor(0);
-													enableStartCmds();
-													//stopSound();
-													
-													running = false;
-													
-													return;
-												}
-												else
-													runCicle();
-				
-												delay = getValue('delay');												
-											},delay);
+																},delay);			
+															},delay);	
+														},delay);																												
+													},delay);
+												},delay);
+
+											}											
 										},delay);
 									},delay);
 								},delay);
 							},delay);
 						},delay);
-					},delay);
-					},delay);
-				};
+					},delay);	
+				},delay);
+			};
+
 						
 			stop_status = 0;
 			enableStopCmds();
@@ -995,7 +1022,8 @@
                     <rect x='23.8%' y='34%' width='10' height='12%' />
 
                     <svg id="dataCornersRemover" class='cornersRemover' xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-                        <rect x='21' y='9' width='8' height='3' />
+                        <rect x='25' y='93.5%' width='9' height='8' />
+						<rect x='21' y='9' width='8' height='3' />
                         <rect x='20.5' y='93.5%' width='9' height='7' />
                         <rect x='31.4%' y='94.1%' width='11' height='8' />
                         <rect x='18.2%' y='1' width='15' height='8' />
@@ -1026,24 +1054,23 @@
                 <label id='decoder'>Decodificador</label>
                 <label id='accL'>ACC</label>
                 <label id='pcL'>PC</label>
-				<label id='mbrL'>MBR</label>
-				<label id='marL'>MAR</label>
+
                 <label id='busL'>Bus datos / instrucciones</label>
                 <label id='addressesBusL' >Bus direccion</label>
                 <label id='ramL' class='rotated'>RAM</label>
+				<label id='fzL'>FLAG ZERO</label>
                 <input type=text readonly id='irCmd'/>
                 <input type=text readonly id='irLoc'/>
-				<input type=text readonly id='mbr'/>
-				<input type=text readonly id='mar'/>
                 <input type=number value=0 id='acc'/>
                 <input type=number value=0 id='pc' min=0 max=9999 onchange="checkCorrectPC()"/>
                 <input id='pcImprove' disabled value='+ 1'/>
+				<input id='fz' disabled value='1'/>
                 <div id="alu_inputs">
                 	<label id='aluL'>ALU</label>
                     <input type=text readonly id='alu1'/>
                     <input type=text readonly id='alu2'/>
                     <input type=text readonly id='aluOp'/>
-                </div>
+                </div>					
             </div>
             <footer>
             	<ul>

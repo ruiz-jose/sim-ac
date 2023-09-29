@@ -23,10 +23,10 @@ La arquitectura del CPU permite gestionar un bus de direcciones de 5 bits = 2**5
 
 
 # logisim-cpu8bit Harvard-Logisim
-<img src="./sim-AC-Harvard-logisim.png" >
+<img src="./assets/sim-AC-Harvard-logisim.png" >
 
 # circuitverse-cpu8bit  (on-line)
-<img src="./AC-7.png" >
+<img src="./assets/AC-7.png" >
 https://circuitverse.org/simulator/embed/sim-ac-harvard
 
 Basado en:
@@ -77,16 +77,16 @@ En la `línea 3`, tenemos `HLT`, esto detiene el programa.
 
 ### Repertorio_de_instrucciones
 
-| OpCode | Nemonico     | Acción
-|--------|--------------|------------
-| 000    | **ADD** xxx  | Sumar el registro AC con el contenido de memoria xxx
-| 001    | **SUB** xxx  | Restar el registro AC con el contenido de memoria xxx
-| 010    | **LDA** xxx  | Cargar el contenido de la dirección de memoria xxx en el registro AC
-| 011    | **STA** xxx  | Almacenar el contenido del registro AC en la dirección de memoria xxx
-| 100    | **JMP** xxx  | Saltar a la dirección de memoria
-| 101    | **JZ** xxx  | Saltar a la dirección de memoria, Si Z= 1
-| 110    | **JC** xxx  | Saltar a la dirección de memoria, Si C= 1
-| 111    | **HLT**      | Detiene la ejecución
+| # | OpCode | Nemonico             | Acción
+| - |--------|----------------------|------------
+| 0 | 000    | **ADD** [Dirección]  | Sumar el registro AC con el contenido de memoria xxx
+| 1 | 001    | **SUB** [Dirección]  | Restar el registro AC con el contenido de memoria xxx
+| 2 | 010    | **LDA** [Dirección]  | Cargar el contenido de la dirección de memoria xxx en el registro AC
+| 3 | 011    | **STA** [Dirección]  | Almacenar el contenido del registro AC en la dirección de memoria xxx
+| 4 | 100    | **JMP** Dirección    | Saltar a la dirección de memoria
+| 5 | 101    | **JZ**  Dirección    | Saltar a la dirección de memoria, Si Z= 1
+| 6 | 110    | **JC**  Dirección    | Saltar a la dirección de memoria, Si C= 1
+| 7 | 111    | **HLT**              | Detiene la ejecución
 
 
 
